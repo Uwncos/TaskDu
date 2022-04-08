@@ -1,0 +1,17 @@
+# Project exclude paths
+
+*.ctxt
+
+.mtj.tmp/
+
+*.jar
+*.war
+*.ear
+
+*.iml
+.idea/
+out/
+lib/
+/target/
+/build/
+/.gradle/
