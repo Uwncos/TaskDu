@@ -1,15 +1,7 @@
 
-
 import java.io.*
 import kotlin.collections.ArrayList
 import kotlin.text.StringBuilder
-
-//class Du(
-//    private val humanForm: Boolean,
-//    private val totalSize: Boolean,
-//    private val base: Boolean,
-////    private val filesNames: List<String>
-//) {
 
 fun getSizeKB(fileStr: String): Long {
     val file = File(fileStr)
@@ -17,53 +9,45 @@ fun getSizeKB(fileStr: String): Long {
     return sizeKB
 }
 
+fun isSI(base: Boolean): Int {
+    var isBaseSI = 1024
+    if (base) isBaseSI = 1000
+    return isBaseSI
+}
 
-fun getSizesInHumanForm(filesNames: List<String>): List<String> {
+
+fun units(base: Boolean): List<String> {
+    var isUnitsSI = arrayListOf<String>(" KB", " MB", "GB")
+    if (base) isUnitsSI = arrayListOf(" KiB", " MiB", "GiB")
+    return isUnitsSI
+}
+
+
+fun getSizesInHumanForm(filesNames: List<String>, base: Boolean): List<String> {
+    val isUnitsSI = units(base)
+    val isBaseSI = isSI(base).toDouble()
     val sizesInHumanFormat = ArrayList<String>()
     for (i in 0..filesNames.size - 1) {
         var sizeInHumanFormat = getSizeKB(filesNames[i]).toDouble()
-        if (sizeInHumanFormat < 1024) {
-            sizeInHumanFormat.toDouble()
-            val size = "$sizeInHumanFormat" + " KB"
+        if (sizeInHumanFormat < isBaseSI) {
+            val size = "$sizeInHumanFormat" + isUnitsSI[0]
             sizesInHumanFormat.add(size)
         }
-        if (sizeInHumanFormat >= 1024 && sizeInHumanFormat < 1_048_576) {
-            sizeInHumanFormat = ((sizeInHumanFormat / 1024.0) * 100).toInt() / 100.0
-            val size = "$sizeInHumanFormat" + " MB"
+        if (sizeInHumanFormat >= isBaseSI && sizeInHumanFormat < isBaseSI * isBaseSI) {
+            sizeInHumanFormat = ((sizeInHumanFormat / isBaseSI) * 100).toInt() / 100.0
+            val size = "$sizeInHumanFormat" + isUnitsSI[1]
             sizesInHumanFormat.add(size)
         }
-        if (sizeInHumanFormat >= 1_048_576) {
-            sizeInHumanFormat = ((sizeInHumanFormat / 1048576.0) * 100).toInt() / 100.0
-            val size = "$sizeInHumanFormat" + " GB"
+        if (sizeInHumanFormat >= isBaseSI * isBaseSI) {
+            sizeInHumanFormat = ((sizeInHumanFormat / (isBaseSI * isBaseSI)) * 100).toInt() / 100.0
+            val size = "$sizeInHumanFormat" + isUnitsSI[2]
             sizesInHumanFormat.add(size)
         }
     }
     return sizesInHumanFormat
 }
 
-fun getSizesInHumanFormSI(filesNames: List<String>): List<String> {
-    val sizesInHumanFormatSI = ArrayList<String>()
-    for (i in 0..filesNames.size - 1) {
-        var sizeInHumanFormat = getSizeKB(filesNames[i]).toDouble()
-        if (sizeInHumanFormat < 1000.0) {
-            val size = "$sizeInHumanFormat" + " KiB"
-            sizesInHumanFormatSI.add(size)
-        }
-        if (sizeInHumanFormat >= 1000 && sizeInHumanFormat < 1_000_000) {
-            sizeInHumanFormat = ((sizeInHumanFormat / 1000.0) * 100).toInt() / 100.0
-            val size = "$sizeInHumanFormat" + " MiB"
-            sizesInHumanFormatSI.add(size)
-        }
-        if (sizeInHumanFormat >= 1_000_000) {
-            sizeInHumanFormat = ((sizeInHumanFormat / 1000000.0) * 100).toInt() / 100.0
-            val size = "$sizeInHumanFormat" + " GiB"
-            sizesInHumanFormatSI.add(size)
-        }
-    }
-    return sizesInHumanFormatSI
-}
-
-fun getSizes(filesNames: List<String>): List<String> {
+fun getSizesKB(filesNames: List<String>): List<String> {
     val sizes = ArrayList<String>()
     for (i in 0..filesNames.size - 1) {
         val size = getSizeKB(filesNames[i])
@@ -73,7 +57,7 @@ fun getSizes(filesNames: List<String>): List<String> {
 }
 
 fun getTotalSizeKB(filesNames: List<String>): Int {
-    val sizes = getSizes(filesNames)
+    val sizes = getSizesKB(filesNames)
     var totalSizeInKB = 0
     for (i in 0..sizes.size - 1) {
         totalSizeInKB += sizes[i].toInt()
@@ -81,56 +65,38 @@ fun getTotalSizeKB(filesNames: List<String>): Int {
     return totalSizeInKB
 }
 
-fun getTotalInHumanForm(filesNames: List<String>): String {
+fun getTotalInHumanForm(filesNames: List<String>, base: Boolean): String {
+    val isUnitsSI = units(base)
+    val isBaseSI = isSI(base).toDouble()
     var totalSizeInHumanForm = getTotalSizeKB(filesNames).toDouble()
-    var base = " KB"
-    if (totalSizeInHumanForm >= 1024 && totalSizeInHumanForm < 1_048_576) {
-        totalSizeInHumanForm = ((totalSizeInHumanForm / 1024.0) * 100).toInt() / 100.0
-        base = " MB"
+    var unit = isUnitsSI[0]
+    if (totalSizeInHumanForm >= isBaseSI && totalSizeInHumanForm < isBaseSI * isBaseSI) {
+        totalSizeInHumanForm = ((totalSizeInHumanForm / isBaseSI) * 100).toInt() / 100.0
+        unit = isUnitsSI[1]
     }
-    if (totalSizeInHumanForm >= 1_048_576) {
-        totalSizeInHumanForm = ((totalSizeInHumanForm / 1048576.0) * 100).toInt() / 100.0
-        base = " GB"
+    if (totalSizeInHumanForm >= isBaseSI * isBaseSI) {
+        totalSizeInHumanForm = ((totalSizeInHumanForm / (isBaseSI * isBaseSI)) * 100).toInt() / 100.0
+        unit = isUnitsSI[2]
     }
-    return "$totalSizeInHumanForm" + base
+    return "$totalSizeInHumanForm" + unit
 }
 
-fun getTotalInHumanFormSI(filesNames: List<String>): String {
-    var totalSizeInHumanFormSI = getTotalSizeKB(filesNames).toDouble()
-    var base = " KiB"
-    if (totalSizeInHumanFormSI >= 1000 && totalSizeInHumanFormSI < 1_000_000) {
-        totalSizeInHumanFormSI = ((totalSizeInHumanFormSI / 1000.0) * 100).toInt() / 100.0
-        base = " MiB"
-    }
-    if (totalSizeInHumanFormSI >= 1_000_000) {
-        totalSizeInHumanFormSI = ((totalSizeInHumanFormSI / 1000000.0) * 100).toInt() / 100.0
-        base = " GiB"
-    }
-    return "$totalSizeInHumanFormSI" + base
-}
-
-
-fun dudu(humanForm: Boolean,totalSize: Boolean, base: Boolean, filesNames: List<String>) {
+fun du(humanForm: Boolean, totalSize: Boolean, base: Boolean, filesNames: List<String>) {
     val result = StringBuilder()
     if (humanForm && base) {
-        result.append(getSizesInHumanFormSI(filesNames))
-    } else if (humanForm) {
-        result.append(getSizesInHumanForm(filesNames))
+        result.append(getSizesInHumanForm(filesNames, base))
     } else {
-        result.append(getSizes(filesNames))
+        result.append(getSizesKB(filesNames))
     }
     if (totalSize && humanForm && base) {
-        result.append(getTotalInHumanFormSI(filesNames))
-    } else if (totalSize && humanForm) {
-        result.append(getTotalInHumanForm(filesNames))
+        result.append(getTotalInHumanForm(filesNames, base))
     } else if (totalSize) {
         result.append(getTotalSizeKB(filesNames))
     }
     println(result)
-//    return result
 }
 fun main(args: Array<String>) {
     DuParser.main(args)
 }
 
-//}
+

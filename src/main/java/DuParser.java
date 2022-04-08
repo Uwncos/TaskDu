@@ -37,7 +37,7 @@ public class DuParser {
             parser.printUsage(System.err);
             throw new IllegalArgumentException("");
         }
-        DuKt.dudu(humanForm, totalSize, base, filesNames);
+        DuKt.du(humanForm, totalSize, base, filesNames);
 
 //        Du du = new Du(humanForm, totalSize, base);
 //        try {
