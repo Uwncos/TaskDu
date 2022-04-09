@@ -33,17 +33,10 @@ public class DuParser {
             parser.parseArgument(args);
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
-            System.err.println("du [options] arguments");
+            System.err.println("java -jar TaskDu-1.0-SNAPSHOT.jar [-c -h --si] file(-s)");
             parser.printUsage(System.err);
             throw new IllegalArgumentException("");
         }
         DuKt.du(humanForm, totalSize, base, filesNames);
-
-//        Du du = new Du(humanForm, totalSize, base);
-//        try {
-//            System.out.println(du.dudu(filesNames));
-//        } catch (Exception e) {
-//            System.err.println(e.getMessage());
-//        }
     }
 }

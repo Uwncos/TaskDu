@@ -7,7 +7,7 @@ import org.apache.commons.io.FileUtils.sizeOfDirectory
 fun getSizeKB(fileStr: String, base: Boolean): Double {
     val isBaseSI = isSI(base)
     val file = File(fileStr)
-    var sizeKB: Double
+    val sizeKB: Double
     if (file.isDirectory) {
         sizeKB = (sizeOfDirectory(file) / isBaseSI * 10).toInt() / 10.0
     }
@@ -76,7 +76,7 @@ fun getTotalSizeKB(filesNames: List<String>, base: Boolean): Double {
 fun getTotalInHumanForm(filesNames: List<String>, base: Boolean): String {
     val isUnitsSI = units(base)
     val isBaseSI = isSI(base)
-    var totalSizeInHumanForm = getTotalSizeKB(filesNames, base).toDouble()
+    var totalSizeInHumanForm = getTotalSizeKB(filesNames, base)
     var unit = isUnitsSI[0]
     if (totalSizeInHumanForm >= isBaseSI && totalSizeInHumanForm < isBaseSI * isBaseSI) {
         totalSizeInHumanForm = ((totalSizeInHumanForm / isBaseSI) * 100).toInt() / 100.0
