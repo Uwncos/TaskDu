@@ -31,7 +31,7 @@ class Du(private val humanForm: Boolean,
             }
             "" + sizeKB0 +  unit[k]
         } else {
-            "" + (sizeKB / isBaseSI)
+            "" + (sizeKB)
         }
     }
 
